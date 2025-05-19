@@ -21,7 +21,7 @@ describe('Basic user flow for Website', () => {
   // Check to make sure that all 20 <product-item> elements have data in them
   // We use .skip() here because this test has a TODO that has not been completed yet.
   // Make sure to remove the .skip after you finish the TODO. 
-  it.skip('Make sure <product-item> elements are populated', async () => {
+  it('Make sure <product-item> elements are populated', async () => {
     console.log('Checking to make sure <product-item> elements are populated...');
 
     // Start as true, if any don't have data, swap to false
@@ -38,10 +38,26 @@ describe('Basic user flow for Website', () => {
     console.log(`Checking product item 1/${prodItemsData.length}`);
 
     // Make sure the title, price, and image are populated in the JSON
-    firstValue = prodItemsData[0];
-    if (firstValue.title.length == 0) { allArePopulated = false; }
-    if (firstValue.price.length == 0) { allArePopulated = false; }
-    if (firstValue.image.length == 0) { allArePopulated = false; }
+    //firstValue = prodItemsData[0];
+    //if (firstValue.title.length == 0) { allArePopulated = false; }
+    //if (firstValue.price.length == 0) { allArePopulated = false; }
+    //if (firstValue.image.length == 0) { allArePopulated = false; }
+
+    for(let i = 0; i < prodItemsData.length; i++) {
+      const product = prodItemsData[i];
+
+      if(!product.title || product.title.length == 0) {
+        allArePopulated = false;
+      }
+
+      if(!product.price || product.price.length == 0) {
+        allArePopulated = false;
+      }
+
+      if(!product.image || product.image.length == 0) {
+        allArePopulated = false;
+      }
+    }
 
     // Expect allArePopulated to still be true
     expect(allArePopulated).toBe(true);
@@ -52,12 +68,11 @@ describe('Basic user flow for Website', () => {
       it checks every <product-item> it found
     * Remove the .skip from this it once you are finished writing this test.
     */
-
   }, 10000);
 
   // Check to make sure that when you click "Add to Cart" on the first <product-item> that
   // the button swaps to "Remove from Cart"
-  it.skip('Clicking the "Add to Cart" button should change button text', async () => {
+  it('Clicking the "Add to Cart" button should change button text', async () => {
     console.log('Checking the "Add to Cart" button...');
 
     /**
@@ -68,6 +83,22 @@ describe('Basic user flow for Website', () => {
      * Once you have the innerText property, use innerText.jsonValue() to get the text value of it
      * Remember to remove the .skip from this it once you are finished writing this test.
      */
+
+     //query product-item
+     const product = await page.$('product-item');
+     //get shadowRoot
+     const shadowRoot = await product.evaluateHandle(el => el.shadowRoot);
+     //query button from shadowRoot
+     const btn = await shadowRoot.$('button');
+     //click button
+     await btn.click();
+     //get innerText
+     const innerText = await btn.getProperty('innerText');
+     //get text value
+     const textValue = await innerText.jsonValue();
+     
+
+     expect(textValue).toBe('Remove from Cart');
 
   }, 2500);
 
